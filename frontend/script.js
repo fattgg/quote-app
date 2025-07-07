@@ -1,4 +1,3 @@
-// DOM Elements
 const quoteEl = document.getElementById('quote');
 const authorEl = document.getElementById('author');
 const newQuoteBtn = document.getElementById('new-quote');
@@ -9,7 +8,6 @@ const speakBtn = document.createElement('button');
 const themeBtn = document.createElement('button');
 const buttonsDiv = document.querySelector('.buttons');
 
-// Add buttons to DOM
 favoriteBtn.innerHTML = '❤️ Favorite';
 favoriteBtn.id = 'favorite';
 shareBtn.innerHTML = '📤 Share';
@@ -23,11 +21,9 @@ buttonsDiv.appendChild(shareBtn);
 buttonsDiv.appendChild(speakBtn);
 document.body.insertBefore(themeBtn, document.querySelector('.container'));
 
-// Speech Synthesis
 const speechSynth = window.speechSynthesis;
 let currentUtterance = null;
 
-// Loading animation
 const loadingHTML = `
   <div class="loading">
     <div class="dot-flashing"></div>
@@ -36,7 +32,6 @@ const loadingHTML = `
 
 let currentQuote = { q: '', a: '' };
 
-// Theme Functions (FIXED)
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -52,7 +47,6 @@ function toggleTheme() {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
-// Voice Functions
 function speakQuote() {
     speechSynth.cancel();
     if (currentQuote.q) {
@@ -72,7 +66,6 @@ function stopSpeech() {
     speakBtn.innerHTML = '🔊 Speak';
 }
 
-// Quote Functions
 async function animateQuoteTransition() {
     stopSpeech();
     quoteEl.classList.add('quote-exiting');
@@ -89,7 +82,7 @@ async function animateQuoteTransition() {
 
 async function fetchQuote() {
     try {
-        const res = await fetch('http://localhost:3000/api/quote');
+        const res = await fetch('https://quote-backend-83nu.onrender.com/api/quote');
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
         currentQuote = {
@@ -105,7 +98,6 @@ async function fetchQuote() {
     }
 }
 
-// Favorite Functions
 function getFavorites() {
     try {
         return JSON.parse(localStorage.getItem('favoriteQuotes')) || [];
@@ -127,7 +119,6 @@ function toggleFavorite() {
     updateFavoriteButton();
 }
 
-// Share Functions
 function showShareOptions() {
     const modal = document.createElement('div');
     modal.className = 'share-modal';
@@ -166,7 +157,6 @@ function showShareOptions() {
     });
 }
 
-// Event Listeners
 newQuoteBtn.addEventListener('click', animateQuoteTransition);
 favoriteBtn.addEventListener('click', toggleFavorite);
 shareBtn.addEventListener('click', showShareOptions);
@@ -182,7 +172,6 @@ speakBtn.addEventListener('click', () => {
     speakBtn.innerHTML === '🔊 Speak' ? speakQuote() : stopSpeech();
 });
 
-// Initialize
 initTheme();
 if (!localStorage.getItem('favoriteQuotes')) {
     localStorage.setItem('favoriteQuotes', '[]');
